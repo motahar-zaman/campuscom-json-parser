@@ -1,0 +1,46 @@
+{
+    "product": {
+        "name": "Learning Product Name",
+        "short_desc": "Short Description",
+        "long_desc": "Long Description",
+        "user_rating": "UserRating",
+        "count_ratings": "UserRatingCount",
+        "provided_by": "Vendor",
+        "type": "Type",
+        "language": "Language",
+        "total_enrolled": "Enrolled",
+        "time_to_complete": "Total Time",
+        "prerequisites": "Prerequisites",
+        "scope_sequence_rating": "",
+        "scope_sequence_text": "",
+        "quiz_rating": "",
+        "quiz_text": "",
+        "lecture_rating": "",
+        "lecture_text": "",
+        "assignment_rating": "",
+        "assignment_text": "",
+        "topics": "Topics",
+        "modules": "Modules"
+    },
+
+    "topic": {
+        "name": "Topic Name",
+        "short_desc": "",
+        "long_desc": "",
+        "length": ""
+    },
+
+    "module": {
+        "name": "Module Name",
+        "short_desc": "",
+        "long_desc": "Module Description",
+        "time": "Time",
+        "lessons": "Lesson"
+    },
+
+    "lesson": {
+        "short_desc": "",
+        "long_desc": "Lesson Description",
+        "type": "Type"
+    }
+}
