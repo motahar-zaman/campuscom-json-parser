@@ -1,4 +1,6 @@
 import json
+from rich import print
+
 
 class ProductSerializer():
     def __init__(self, mapping, data):
@@ -10,7 +12,13 @@ class ProductSerializer():
         product = {}
 
         for key, val in self.mapping.get('product', {}).items():
-            if key == 'topics':
+            if key == 'skills':
+                product[key] = []
+                for skill in product_dict.get(val, []):
+                    skill_serializer = SkillSerializer(self.mapping, skill)
+                    product[key].append(skill_serializer.serialize())
+
+            elif key == 'topics':
                 product[key] = []
                 for topic in product_dict.get(val, []):
                     topic_serializer = TopicSerializer(self.mapping, topic)
@@ -21,10 +29,33 @@ class ProductSerializer():
                 for module in product_dict.get(val, []):
                     module_serializer = ModuleSerializer(self.mapping, module)
                     product[key].append(module_serializer.serialize())
+
+            elif key == 'prerequisites':
+                product[key] = ','.join(product_dict.get(val, []))
+
+            elif key == 'total_enrolled':
+                try:
+                    product[key] = int(product_dict.get(val, None).replace(',', ''))
+                except ValueError:
+                    product[key] = None
+
             else:
                 product[key] = product_dict.get(val, None)
-
         return product
+
+
+class SkillSerializer():
+    def __init__(self, mapping, data):
+        self.mapping = mapping
+        self.data = data
+
+    def serialize(self):
+        skill = {}
+
+        for key, val in self.mapping.get('skill', {}).items():
+            skill[key] = self.data.get(val, None)
+
+        return skill
 
 
 class TopicSerializer():

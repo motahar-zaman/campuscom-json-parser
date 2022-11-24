@@ -20,7 +20,8 @@
         "assignment_rating": "",
         "assignment_text": "",
         "topics": "Topics",
-        "modules": "Modules"
+        "modules": "Modules",
+        "skills": "Skills"
     },
 
     "topic": {
@@ -42,5 +43,9 @@
         "short_desc": "",
         "long_desc": "Lesson Description",
         "type": "Type"
+    },
+
+    "skill": {
+        "name": "Skill name"
     }
 }

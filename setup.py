@@ -5,6 +5,7 @@ setup(
     version='0.0.1',
     packages=find_packages(include=['campuscomjsonparser', 'campuscomjsonparser.*']),
     install_requires=[
+        'mysql-connector-python',
         'click',
     ],
 
