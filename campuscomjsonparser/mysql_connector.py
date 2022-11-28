@@ -25,13 +25,15 @@ class Database(object):
         return self.connection
 
 
-def check_exists(config, tablename, id_field, where):
+def check_exists(config, tablename, id_field, provided_by, name):
     database = Database(config)
     connection = database.connect()
     cursor = connection.cursor()
-    sql = f"SELECT {id_field}, COUNT(*) FROM {tablename} WHERE {where} GROUP BY {id_field}"
+    sql = f"SELECT {id_field}, COUNT(*) FROM {tablename} WHERE provided_by = %s AND name = %s GROUP BY {id_field}"
+
     print(sql)
-    cursor.execute(sql)
+
+    cursor.execute(sql, (provided_by, name))
     # execute statement same as above  
     msg = cursor.fetchone()
     # check if it is empty and print error

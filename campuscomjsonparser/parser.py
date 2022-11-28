@@ -67,8 +67,7 @@ def main(datafile, mapping, config):
             modules = product.pop('modules', [])
             topics = product.pop('topics', [])
             skills = product.pop('skills', [])
-            product_where = f"provided_by = '{product['provided_by']}' AND name = '{product['name']}'"
-            product_exists = check_exists(config, 'product', 'product_id', product_where)
+            product_exists = check_exists(config, 'product', 'product_id', product['provided_by'], product['name'])
             if product_exists:
                 # or update
                 # update_row(config, 'product', product, product_exists)
