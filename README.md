@@ -78,3 +78,15 @@ Options:
 ```
 
 A sample of mapping file and config file is included with this project. Please modify them as neccessary before using them.
+
+Finally, run the script like this:
+
+```
+python campuscomjsonparser/parser.py --datafile ~/path/to/courses.jsonlines --mapping ~/path/to/mapping.json --config ~/path/to/config.json
+```
+
+Troubleshooting
+---------------
+
+Please make sure to use python 3 to run the script.
+The script will write logs in a file called `debug.log`. Please consult that file in case of trouble.
