@@ -14,9 +14,13 @@ class ProductSerializer():
         for key, val in self.mapping.get('product', {}).items():
             if key == 'skills':
                 product[key] = []
-                for skill in product_dict.get(val, []):
-                    skill_serializer = SkillSerializer(self.mapping, skill)
-                    product[key].append(skill_serializer.serialize())
+
+                if product_dict.get(val, []) is None:
+                    product[key].append({})
+                else:
+                    for skill in product_dict.get(val, []):
+                        skill_serializer = SkillSerializer(self.mapping, skill)
+                        product[key].append(skill_serializer.serialize())
 
             elif key == 'topics':
                 product[key] = []
