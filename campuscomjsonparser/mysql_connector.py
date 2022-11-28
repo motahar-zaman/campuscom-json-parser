@@ -1,5 +1,5 @@
 import mysql.connector
-from campuscomjsonparser.logger import logger
+from logger import logger
 
 
 def singleton(class_):
@@ -24,12 +24,26 @@ class Database(object):
         return self.connection
 
 
+def check_exists(config, tablename, id_field, where):
+    database = Database(config)
+    connection = database.connect()
+    cursor = connection.cursor()
+    sql = f"SELECT {id_field}, COUNT(*) FROM {tablename} WHERE {where}"
+    print(sql)
+    cursor.execute(sql)
+    # execute statement same as above  
+    msg = cursor.fetchone()
+    # check if it is empty and print error
+    if msg:
+        print(msg)
+        return msg[0]
+    return None
+
+
 def add_row(config, tablename, rowdict):
     database = Database(config)
     connection = database.connect()
     cursor = connection.cursor()
-    #import ipdb; ipdb.set_trace()
-    # filter out keys that are not column names
     cursor.execute("describe %s" % tablename)
     allowed_keys = set(row[0] for row in cursor.fetchall())
     keys = allowed_keys.intersection(rowdict)
@@ -44,6 +58,32 @@ def add_row(config, tablename, rowdict):
 
     sql = "insert into %s (%s) values (%s)" % (
         tablename, columns, values_template)
+    values = tuple(rowdict[key] for key in keys)
+
+    cursor.execute(sql, values)
+    row_id = cursor.lastrowid
+    connection.commit()
+    return row_id
+
+
+def update_row(config, tablename, rowdict, row_id):
+    database = Database(config)
+    connection = database.connect()
+    cursor = connection.cursor()
+    cursor.execute("describe %s" % tablename)
+    allowed_keys = set(row[0] for row in cursor.fetchall())
+    keys = allowed_keys.intersection(rowdict)
+
+    if len(rowdict) > len(keys):
+        unknown_keys = set(rowdict) - allowed_keys
+        print(tablename)
+        print('unknown keys: ', unknown_keys)
+
+    columns = ", ".join(keys)
+    values_template = ", ".join(["%s"] * len(keys))
+
+    sql = "UPDATE %s SET (%s) values (%s) WHERE id = (%s)" % (
+        tablename, columns, values_template, row_id)
     values = tuple(rowdict[key] for key in keys)
 
     cursor.execute(sql, values)

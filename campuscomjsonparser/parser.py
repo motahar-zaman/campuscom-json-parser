@@ -1,10 +1,10 @@
 import sys
 from pathlib import Path
 import click
-from campuscomjsonparser.serializers import ProductSerializer
+from serializers import ProductSerializer
 import json
-from campuscomjsonparser.mysql_connector import add_row
-from campuscomjsonparser.logger import logger
+from mysql_connector import add_row, update_row, check_exists
+from logger import logger
 
 
 def terminate(msg='Can not continue. Please consult logs for details'):
@@ -67,24 +67,33 @@ def main(datafile, mapping, config):
             modules = product.pop('modules', [])
             topics = product.pop('topics', [])
             skills = product.pop('skills', [])
-            product_id = add_row(config, 'product', product)
+            product_where = f"provided_by = '{product['provided_by']}' AND name = '{product['name']}'"
+            product_exists = check_exists(config, 'product', 'product_id', product_where)
+            if product_exists:
+                # or update
+                # update_row(config, 'product', product, product_exists)
+                # logger(f'inserted product: {product_exists}')
+                logger(f'skipping product: {product_exists}')
+                continue
+            else:
+                product_id = add_row(config, 'product', product)
 
-            for topic in topics:
-                topic_id = add_row(config, 'topics', topic)
-                jn_product_topics_id = add_row(config, 'jn_product_topics', {'product_id': product_id, 'topic_id': topic_id})
+                for topic in topics:
+                    topic_id = add_row(config, 'topics', topic)
+                    jn_product_topics_id = add_row(config, 'jn_product_topics', {'product_id': product_id, 'topic_id': topic_id})
 
-            for module in modules:
-                lessons = module.pop('lessons', [])
-                module_id = add_row(config, 'modules', module)
+                for module in modules:
+                    lessons = module.pop('lessons', [])
+                    module_id = add_row(config, 'modules', module)
 
-                for lesson in lessons:
-                    lesson_id = add_row(config, 'lessons', lesson)
+                    for lesson in lessons:
+                        lesson_id = add_row(config, 'lessons', lesson)
 
-            for skill in skills:
-                skill_id = add_row(config, 'skills', skill)
-                jn_product_skills_id = add_row(config, 'jn_product_skills', {'product_id': product_id, 'skill_id': skill_id})
+                for skill in skills:
+                    skill_id = add_row(config, 'skills', skill)
+                    jn_product_skills_id = add_row(config, 'jn_product_skills', {'product_id': product_id, 'skill_id': skill_id})
 
-            logger(f'inserted product: {product_id}')
+                logger(f'inserted product: {product_id}')
 
 
 if __name__ == '__main__':

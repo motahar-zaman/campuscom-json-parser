@@ -40,7 +40,10 @@ class ProductSerializer():
                     product[key] = None
 
             else:
-                product[key] = product_dict.get(val, None)
+                try:
+                    product[key] = product_dict.get(val, None)
+                except TypeError:
+                    import ipdb; ipdb.set_trace()
         return product
 
 

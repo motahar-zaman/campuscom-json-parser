@@ -3,5 +3,6 @@
 	"port": 3306,
 	"user": "root",
 	"password": "r123r123",
-	"database": "test"
+	"database": "test",
+	"use_unicode": true
 }
