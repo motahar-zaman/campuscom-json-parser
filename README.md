@@ -82,7 +82,7 @@ A sample of mapping file and config file is included with this project. Please m
 Finally, run the script like this:
 
 ```
-python campuscomjsonparser/parser.py --datafile ~/path/to/courses.jsonlines --mapping ~/path/to/mapping.json --config ~/path/to/config.json
+python campuscomjsonparser/parser.py --datafile /path/to/courses.jsonlines --mapping /path/to/mapping.json --config /path/to/config.json
 ```
 
 Troubleshooting

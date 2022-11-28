@@ -1,5 +1,13 @@
 {
-    "product": {
+    "product_table_name": "products",
+    "topic_table_name": "topics",
+    "module_table_name": "modules",
+    "lesson_table_name": "lessons",
+    "skill_table_name": "skills",
+    "product_topic_join_table_name": "jn_product_topics",
+    "product_skill_join_table": "jn_product_skill",
+
+    "product_map": {
         "name": "Learning Product Name",
         "short_desc": "Short Description",
         "long_desc": "Long Description",
@@ -24,14 +32,14 @@
         "skills": "Skills"
     },
 
-    "topic": {
+    "topic_map": {
         "name": "Topic Name",
         "short_desc": "",
         "long_desc": "",
         "length": ""
     },
 
-    "module": {
+    "module_map": {
         "name": "Module Name",
         "short_desc": "",
         "long_desc": "Module Description",
@@ -39,13 +47,13 @@
         "lessons": "Lesson"
     },
 
-    "lesson": {
+    "lesson_map": {
         "short_desc": "",
         "long_desc": "Lesson Description",
         "type": "Type"
     },
 
-    "skill": {
+    "skill_map": {
         "name": "Skill name"
     }
 }

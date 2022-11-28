@@ -11,7 +11,7 @@ class ProductSerializer():
         product_dict = json.loads(self.data)
         product = {}
 
-        for key, val in self.mapping.get('product', {}).items():
+        for key, val in self.mapping.get('product_map', {}).items():
             if key == 'skills':
                 product[key] = []
 
@@ -61,7 +61,7 @@ class SkillSerializer():
     def serialize(self):
         skill = {}
 
-        for key, val in self.mapping.get('skill', {}).items():
+        for key, val in self.mapping.get('skill_map', {}).items():
             skill[key] = self.data.get(val, None)
 
         return skill
@@ -75,7 +75,7 @@ class TopicSerializer():
     def serialize(self):
         topic = {}
 
-        for key, val in self.mapping.get('topic', {}).items():
+        for key, val in self.mapping.get('topic_map', {}).items():
             topic[key] = self.data.get(val, None)
 
         return topic
@@ -89,7 +89,7 @@ class ModuleSerializer():
     def serialize(self):
         module = {}
 
-        for key, val in self.mapping.get('module', {}).items():
+        for key, val in self.mapping.get('module_map', {}).items():
             if key == 'lessons':
                 module[key] = []
                 for lesson in self.data.get(val, []):
@@ -109,7 +109,7 @@ class LessonSerializer():
     def serialize(self):
         lesson = {}
 
-        for key, val in self.mapping.get('lesson', {}).items():
+        for key, val in self.mapping.get('lesson_map', {}).items():
             lesson[key] = self.data.get(val, None)
 
         return lesson

@@ -1,4 +1,4 @@
-import json
+import sys
 import mysql.connector
 from logger import logger
 
@@ -17,7 +17,11 @@ def singleton(class_):
 class Database(object):
     def __init__(self, config):
         config.update({"raise_on_warnings": True})
-        conn = mysql.connector.connect(**config)
+        try:
+            conn = mysql.connector.connect(**config)
+        except mysql.connector.Error as e:
+            logger(e, level=40)
+            sys.exit('Could not connect to database')
 
         self.connection = conn
 
@@ -25,17 +29,18 @@ class Database(object):
         return self.connection
 
 
-def check_exists(config, tablename, id_field, provided_by, name):
+def check_exists(config, tablename, id_field, product):
     database = Database(config)
     connection = database.connect()
     cursor = connection.cursor()
     sql = f"SELECT {id_field}, COUNT(*) FROM {tablename} WHERE provided_by = %s AND name = %s GROUP BY {id_field}"
 
-    cursor.execute(sql, (provided_by, name))
+    cursor.execute(sql, (product['provided_by'], product['name']))
     # execute statement same as above  
     msg = cursor.fetchone()
     # check if it is empty and print error
     if msg:
+        print('existense: ', msg)
         return msg[0]
     return None
 
@@ -44,14 +49,13 @@ def add_row(config, tablename, rowdict):
     database = Database(config)
     connection = database.connect()
     cursor = connection.cursor()
+
     cursor.execute("describe %s" % tablename)
     allowed_keys = set(row[0] for row in cursor.fetchall())
     keys = allowed_keys.intersection(rowdict)
 
     if len(rowdict) > len(keys):
-        unknown_keys = set(rowdict) - allowed_keys
-        print(tablename)
-        print('unknown keys: ', unknown_keys)
+        sys.exit(f'column name mistach in table {tablename}')
 
     columns = ", ".join(keys)
     values_template = ", ".join(["%s"] * len(keys))
@@ -60,9 +64,12 @@ def add_row(config, tablename, rowdict):
         tablename, columns, values_template)
     values = tuple(rowdict[key] for key in keys)
 
-    cursor.execute(sql, values)
-    row_id = cursor.lastrowid
-    connection.commit()
+    try:
+        cursor.execute(sql, values)
+        row_id = cursor.lastrowid
+        connection.commit()
+    except mysql.connector.Error as e:
+        logger(e, level=40)
     return row_id
 
 
@@ -70,23 +77,23 @@ def update_row(config, tablename, rowdict, row_id):
     database = Database(config)
     connection = database.connect()
     cursor = connection.cursor()
+
     cursor.execute("describe %s" % tablename)
     allowed_keys = set(row[0] for row in cursor.fetchall())
     keys = allowed_keys.intersection(rowdict)
 
     if len(rowdict) > len(keys):
-        unknown_keys = set(rowdict) - allowed_keys
-        print(tablename)
-        print('unknown keys: ', unknown_keys)
+        sys.exit(f'column name mistach in table {tablename}')
 
-    columns = ", ".join(keys)
-    values_template = ", ".join(["%s"] * len(keys))
+    columns = "=%s, ".join(keys)
 
-    sql = "UPDATE %s SET (%s) values (%s) WHERE id = (%s)" % (
-        tablename, columns, values_template, row_id)
+    sql = f"UPDATE {tablename} SET {columns} WHERE product_id = {row_id}"
     values = tuple(rowdict[key] for key in keys)
-
-    cursor.execute(sql, values)
-    row_id = cursor.lastrowid
-    connection.commit()
+    import ipdb; ipdb.set_trace()
+    try:
+        cursor.execute(sql, values)
+        row_id = cursor.lastrowid
+        connection.commit()
+    except mysql.connector.Error as e:
+        logger(e, level=40)
     return row_id
