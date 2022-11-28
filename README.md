@@ -47,7 +47,7 @@ This file must be valid JSON. In future, it may contain more configuration optio
 How to run this script
 ----------------------
 
-To install this package first clone this repository. Then step into the directory:
+To run this package first clone this repository. Then step into the directory:
 
 ```
 cd campuscom-json-parser
@@ -58,7 +58,7 @@ After that, run the following command to install required dependencies:
 pip install -r requirements.txt
 ```
 
-Once installed, invoke the script with ``--help`` param to see how to pass data and configurations needed to properly run the script.
+Once dependencies are taken care off, invoke the script with ``--help`` param to see how to pass data and configurations files needed to properly run the script.
 ```
 python campuscomjsonparser/parser.py --help
 ```
@@ -77,4 +77,4 @@ Options:
   --help           Show this message and exit.
 ```
 
-A sample of mapper file and config file is included with this project. Please modify them as neccessary and then use them.
+A sample of mapping file and config file is included with this project. Please modify them as neccessary before using them.
