@@ -38,6 +38,8 @@ class ProductSerializer():
                     product[key] = int(product_dict.get(val, None).replace(',', ''))
                 except ValueError:
                     product[key] = None
+                except AttributeError:
+                    product[key] = None
 
             else:
                 try:

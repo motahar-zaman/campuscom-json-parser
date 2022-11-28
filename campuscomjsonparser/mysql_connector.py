@@ -1,3 +1,4 @@
+import json
 import mysql.connector
 from logger import logger
 
@@ -28,14 +29,13 @@ def check_exists(config, tablename, id_field, where):
     database = Database(config)
     connection = database.connect()
     cursor = connection.cursor()
-    sql = f"SELECT {id_field}, COUNT(*) FROM {tablename} WHERE {where}"
+    sql = f"SELECT {id_field}, COUNT(*) FROM {tablename} WHERE {where} GROUP BY {id_field}"
     print(sql)
     cursor.execute(sql)
     # execute statement same as above  
     msg = cursor.fetchone()
     # check if it is empty and print error
     if msg:
-        print(msg)
         return msg[0]
     return None
 

@@ -2,7 +2,7 @@
 
 Parses provided data and stores them into mysql database
 
-Installation instructions
+How to run this script
 -------------------------
 
 To install this package first clone this repository. Then step into the directory:

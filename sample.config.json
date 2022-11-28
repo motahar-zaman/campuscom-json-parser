@@ -1,8 +1,8 @@
 {
 	"host": "127.0.0.1",
 	"port": 3306,
-	"user": "root",
-	"password": "r123r123",
-	"database": "test",
+	"user": "tapu",
+	"password": "sgc123",
+	"database": "campuscom",
 	"use_unicode": true
 }
