@@ -59,9 +59,17 @@ def main(datafile, mapping, config):
 
     data_map, config, data = config_reader(mapping, config, datafile)
     datafile = Path(datafile)
+    print('started reading file: ', datafile)
 
+    processed = 0
+    skipped = 0
+    failed = 0
     with open(data) as f:
-        for line in f:
+        #import ipdb; ipdb.set_trace()
+        lines = [line for line in f.readlines() if line.strip() != '']
+        total = len(lines)
+        print('Total products in file: ', total)
+        for line in lines:
             serializer = ProductSerializer(data_map, data=line)
             product = serializer.serialize()
             modules = product.pop('modules', [])
@@ -73,6 +81,7 @@ def main(datafile, mapping, config):
                 # update_row(config, 'product', product, product_exists)
                 # logger(f'inserted product: {product_exists}')
                 logger(f'skipping product: {product_exists}')
+                skipped = skipped + 1
                 continue
             else:
                 product_id = add_row(config, 'product', product)
@@ -93,7 +102,11 @@ def main(datafile, mapping, config):
                     jn_product_skills_id = add_row(config, 'jn_product_skills', {'product_id': product_id, 'skill_id': skill_id})
 
                 logger(f'inserted product: {product_id}')
+                processed = processed + 1
 
-
+    print('Total processed: ', processed)
+    print('Skipped: ', skipped)
+    print('Failed: ', failed)
+    print('\n')
 if __name__ == '__main__':
     main()
