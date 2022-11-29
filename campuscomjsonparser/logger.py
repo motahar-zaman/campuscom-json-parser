@@ -1,11 +1,12 @@
 import sys
 import logging
+from datetime import datetime
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[
-        logging.FileHandler("debug.log"),
+        logging.FileHandler('{:%Y-%m-%d}.log'.format(datetime.now())),
         # logging.StreamHandler(sys.stdout)
     ]
 )

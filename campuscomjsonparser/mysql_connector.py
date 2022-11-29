@@ -68,12 +68,9 @@ def add_row(config, tablename, rowdict):
         row_id = cursor.lastrowid
         connection.commit()
         return row_id
-
-        # dirty hack. lastrowid is not working for some reason. no time to investigate
-        # product_id = check_exists(config, tablename, 'product_id', rowdict)
-        # return product_id
     except mysql.connector.Error as e:
         logger(f"Could not create item in table {tablename}", level=40)
+        logger(f"Name: {rowdict.get('name', '')}", level=40)
         logger(e, level=40)
     return None
 
@@ -103,6 +100,7 @@ def update_row(config, tablename, rowdict, row_id):
         return row_id
     except mysql.connector.Error as e:
         logger(f'Could not update row {row_id} in table {tablename}', level=40)
+        logger(f"Name: {rowdict.get('name', '')}", level=40)
         logger(e, level=40)
 
     return None

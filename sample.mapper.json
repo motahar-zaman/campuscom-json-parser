@@ -13,7 +13,7 @@
         "long_desc": "Long Description",
         "user_rating": "UserRating",
         "count_ratings": "UserRatingCount",
-        "provided_by": "Provided by",
+        "provided_by": "Vendor",
         "type": "Type",
         "language": "Language",
         "total_enrolled": "Enrolled",

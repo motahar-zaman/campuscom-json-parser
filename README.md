@@ -99,8 +99,11 @@ Options:
                    [required]
   --config TEXT    File containing configuration options  [required]
   --datafile TEXT  Path of the JSON file  [required]
+  --insert_new_only  Insert new items, skip the rest.
   --help           Show this message and exit.
 ```
+
+The `--insert_new_only` flag is optional. If it is added while running, the script will ignore any item already present in the database. If this flag is not provided, then the script updates the everything with new data.
 
 A sample of mapping file and config file is included with this project. Please modify them as neccessary before using them.
 
