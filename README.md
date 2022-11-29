@@ -9,25 +9,50 @@ This script requires a mapping file. It must be a valid JSON file containing key
 
 ```
 {
-    "product": {
+    "product_table_name": "products",
+    "topic_table_name": "topics",
+    "module_table_name": "modules",
+    "lesson_table_name": "lessons",
+    "skill_table_name": "skills",
+    "product_topic_join_table_name": "jn_product_topics",
+    "product_skill_join_table": "jn_product_skills",
+
+    "product_map": {
         "name": "Learning Product Name",
-        "topics": "Topics",
-        "modules": "Modules",
+        "short_desc": "Short Description",
+        "long_desc": "Long Description",
         "skills": "Skills"
     },
 
-    "topic": {
-        "name": "Topic Name"
+    "topic_map": {
+        "name": "Topic Name",
+        "short_desc": "",
+        "long_desc": "",
+        "length": ""
     },
 
-    "module": {
-        "name": "Module Name"
+    "module_map": {
+        "name": "Module Name",
+        "short_desc": "",
+        "long_desc": "Module Description",
+        "time": "Time",
+        "lessons": "Lesson"
+    },
+
+    "lesson_map": {
+        "short_desc": "",
+        "long_desc": "Lesson Description",
+        "type": "Type"
+    },
+
+    "skill_map": {
+        "name": "Skill name"
     }
 }
 
 ```
 
-The top level keys are for the types of data we are going to parse e.g. `product`, `topic`, `skill`, `module`, `lesson` etc. And inside each item, they keys denote the column names in the table, and their values represent the names in the data file. So, the keys `name`, `topics` and others are the column names in the table for product. And their values (`Learning Product Name`, `Topics` etc.) must be the labels in the data file. Please note, these items are all case sensitive.
+The top level keys are the names of the tables. There are also the types of data we are going to parse e.g. `product`, `topic`, `skill`, `module`, `lesson` etc. And inside each item, they keys denote the column names in the table, and their values represent the names in the data file. So, the keys `name`, `topics` and others are the column names in the table for product. And their values (`Learning Product Name`, `Topics` etc.) must be the labels in the data file. Please note, these items are all case sensitive.
 
 A configuration file containing database credentials must be supplied as well. That file is fairly self-explanatory:
 ```
