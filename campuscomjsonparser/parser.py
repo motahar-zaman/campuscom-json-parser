@@ -66,6 +66,7 @@ def main(datafile, mapping, config, insert_new_only):
     failed = 0
     skipped = 0
     updated = 0
+    created = 0
 
     with open(data) as f:
         logger(f'Reading file: {datafile}')
@@ -106,6 +107,8 @@ def main(datafile, mapping, config, insert_new_only):
                     print(e)
                     logger(traceback.format_exc(), level=40)
                     continue
+                else:
+                    created = created + 1
 
             for topic in topics:
                 topic_id = add_row(config, data_map['topic_table_name'], topic)
@@ -125,9 +128,12 @@ def main(datafile, mapping, config, insert_new_only):
                 add_row(config, data_map['product_skill_join_table'], {'product_id': product_id, 'skill_id': skill_id})
 
             processed = processed + 1
-        logger(f'Number of records processed: {processed}')
+        logger(f'Created: {created}')
         logger(f'Updated: {updated}')
         logger(f'Skipped: {skipped}')
+        logger(f'Number of records processed: {processed}')
 
+    logger('\n')
 if __name__ == '__main__':
+    logger('#################### SUMMARY ####################')
     main()
