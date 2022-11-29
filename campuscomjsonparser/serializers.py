@@ -1,5 +1,6 @@
 import json
 from rich import print
+from logger import logger
 
 
 class ProductSerializer():
@@ -8,7 +9,11 @@ class ProductSerializer():
         self.data = data
 
     def serialize(self):
-        product_dict = json.loads(self.data)
+        try:
+            product_dict = json.loads(self.data)
+        except json.decoder.JSONDecodeError:
+            logger('Malformed JSON file. Could not read data.')
+
         product = {}
 
         for key, val in self.mapping.get('product_map', {}).items():

@@ -3,7 +3,7 @@ from pathlib import Path
 import click
 from serializers import ProductSerializer
 import json
-from mysql_connector import add_row, update_row, check_exists
+from mysql_connector import add_row, update_row, check_exists, delete_children
 from logger import logger
 import traceback
 
@@ -65,9 +65,12 @@ def main(datafile, mapping, config, insert_new_only):
     processed = 0
     failed = 0
     skipped = 0
+    updated = 0
 
     with open(data) as f:
+        logger(f'Reading file: {datafile}')
         lines = [line for line in f.readlines() if line.strip() != '']
+        logger(f'Number of records found: {len(lines)}')
         for line in lines:
             serializer = ProductSerializer(data_map, data=line)
             product = serializer.serialize()
@@ -77,19 +80,22 @@ def main(datafile, mapping, config, insert_new_only):
 
             # check if exists. we will either skip or update depending on user input.
             product_exists = check_exists(config, data_map['product_table_name'], 'product_id', product)
-
             if insert_new_only and product_exists:
                 # skip skip
                 skipped = skipped + 1
                 continue
 
-            # if the product is not skipped, we delete everything if it exists
+            # if the product is not skipped, we delete everything if it exists (except the product itself, which we update)
 
             if product_exists:
                 # update product.
                 product_id = update_row(config, data_map['product_table_name'], product, product_exists)
-                logger(f'product updated: {product_id}')
+                # update does not return product id sometimes. so
+                product_id = product_exists
+                updated = updated + 1
                 # delete children.
+
+                delete_children(data_map, product_exists)
 
             else:
                 # otherwise, just create records normally
@@ -107,9 +113,11 @@ def main(datafile, mapping, config, insert_new_only):
 
             for module in modules:
                 lessons = module.pop('lessons', [])
-                add_row(config, data_map['module_table_name'], module)
+                module['product_id'] = product_id
+                module_id = add_row(config, data_map['module_table_name'], module)
 
                 for lesson in lessons:
+                    lesson['module_id'] = module_id
                     add_row(config, data_map['lesson_table_name'], lesson)
 
             for skill in skills:
@@ -117,7 +125,9 @@ def main(datafile, mapping, config, insert_new_only):
                 add_row(config, data_map['product_skill_join_table'], {'product_id': product_id, 'skill_id': skill_id})
 
             processed = processed + 1
-
+        logger(f'Number of records processed: {processed}')
+        logger(f'Updated: {updated}')
+        logger(f'Skipped: {skipped}')
 
 if __name__ == '__main__':
     main()

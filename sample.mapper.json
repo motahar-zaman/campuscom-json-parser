@@ -5,7 +5,7 @@
     "lesson_table_name": "lessons",
     "skill_table_name": "skills",
     "product_topic_join_table_name": "jn_product_topics",
-    "product_skill_join_table": "jn_product_skill",
+    "product_skill_join_table": "jn_product_skills",
 
     "product_map": {
         "name": "Learning Product Name",
