@@ -138,7 +138,7 @@ def delete_children(data_map, product_id):
     if len(skill_ids):
         # delete skills
         skill_list = [item[0] for item in skill_ids]
-        sql = f"DELETE FROM {data_map['skill_table_name']} WHERE topic_id IN (" + ",".join(["%s"] * len(skill_ids)) + ')'
+        sql = f"DELETE FROM {data_map['skill_table_name']} WHERE skill_id IN (" + ",".join(["%s"] * len(skill_ids)) + ')'
         cursor.execute(sql, skill_list)
         connection.commit()
 
