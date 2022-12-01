@@ -33,9 +33,9 @@ def check_exists(config, tablename, id_field, product):
     database = Database(config)
     connection = database.connect()
     cursor = connection.cursor(buffered=True)
-    sql = f"SELECT {id_field}, COUNT(*) FROM {tablename} WHERE provided_by = %s AND name = %s GROUP BY {id_field}"
+    sql = f"SELECT {id_field}, COUNT(*) FROM {tablename} WHERE vendor = %s AND name = %s GROUP BY {id_field}"
 
-    cursor.execute(sql, (product['provided_by'], product['name']))
+    cursor.execute(sql, (product['vendor'], product['name']))
     # execute statement same as above  
     msg = cursor.fetchone()
     # check if it is empty and print error

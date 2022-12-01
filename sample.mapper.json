@@ -13,7 +13,7 @@
         "long_desc": "Long Description",
         "user_rating": "UserRating",
         "count_ratings": "UserRatingCount",
-        "provided_by": "Vendor",
+        "provided_by": "Provided by",
         "type": "Type",
         "language": "Language",
         "total_enrolled": "Enrolled",
@@ -27,6 +27,7 @@
         "lecture_text": "",
         "assignment_rating": "",
         "assignment_text": "",
+        "vendor": "Vendor",
         "topics": "Topics",
         "modules": "Modules",
         "skills": "Skills"

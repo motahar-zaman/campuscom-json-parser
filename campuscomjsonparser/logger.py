@@ -6,7 +6,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[
-        logging.FileHandler('{:%Y-%m-%d}.log'.format(datetime.now())),
+        logging.FileHandler('{:%Y-%m-%d_output}.log'.format(datetime.now())),
         # logging.StreamHandler(sys.stdout)
     ]
 )
