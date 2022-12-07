@@ -5,7 +5,16 @@ from serializers import ProductSerializer
 import json
 from mysql_connector import add_row, update_row, check_exists, delete_children
 from logger import logger
-import traceback
+from rich.progress import Progress, TextColumn, BarColumn, TaskProgressColumn, SpinnerColumn, TimeRemainingColumn, TimeElapsedColumn, MofNCompleteColumn
+
+progress = Progress(
+    SpinnerColumn(),
+    MofNCompleteColumn(),
+    BarColumn(bar_width=None),
+    TaskProgressColumn(),
+    TimeElapsedColumn(),
+    transient=True
+)
 
 
 def terminate(msg='Can not continue. Please consult logs for details'):
@@ -72,68 +81,68 @@ def main(datafile, mapping, config, insert_new_only):
         logger(f'Reading file: {datafile}')
         lines = [line for line in f.readlines() if line.strip() != '']
         logger(f'Number of records found: {len(lines)}')
-        for line in lines:
-            serializer = ProductSerializer(data_map, data=line)
-            product = serializer.serialize()
-            modules = product.pop('modules', [])
-            topics = product.pop('topics', [])
-            skills = product.pop('skills', [])
 
-            # check if exists. we will either skip or update depending on user input.
-            product_exists = check_exists(config, data_map['product_table_name'], 'product_id', product)
-            if insert_new_only and product_exists:
-                # skip skip
-                skipped = skipped + 1
-                continue
+        with progress:
+            for line in progress.track(lines):
+                serializer = ProductSerializer(data_map, data=line)
+                product = serializer.serialize()
+                modules = product.pop('modules', [])
+                topics = product.pop('topics', [])
+                skills = product.pop('skills', [])
 
-            # if the product is not skipped, we delete everything if it exists (except the product itself, which we update)
-
-            if product_exists:
-                # update product.
-                product_id = update_row(config, data_map['product_table_name'], product, product_exists)
-                # update does not return product id sometimes. so
-                product_id = product_exists
-                updated = updated + 1
-                # delete children.
-
-                delete_children(data_map, product_exists)
-
-            else:
-                # otherwise, just create records normally
-                try:
-                    product_id = add_row(config, data_map['product_table_name'], product)
-                except Exception as e:
-                    failed = failed + 1
-                    print(e)
-                    logger(traceback.format_exc(), level=40)
+                # check if exists. we will either skip or update depending on user input.
+                product_exists = check_exists(config, data_map['product_table_name'], 'product_id', product)
+                if insert_new_only and product_exists:
+                    # skip skip
+                    skipped = skipped + 1
                     continue
+
+                # if the product is not skipped, we delete everything if it exists (except the product itself, which we update)
+
+                if product_exists:
+                    # update product.
+                    product_id = update_row(config, data_map['product_table_name'], product, product_exists)
+                    # update does not return product id sometimes. so
+                    product_id = product_exists
+                    updated = updated + 1
+                    # delete children.
+                    delete_children(data_map, product_exists)
+
                 else:
-                    created = created + 1
+                    # otherwise, just create records normally
+                    product_id = add_row(config, data_map['product_table_name'], product)
+                    if not product_id:
+                        failed = failed + 1
+                        continue
+                    else:
+                        created = created + 1
 
-            for topic in topics:
-                topic_id = add_row(config, data_map['topic_table_name'], topic)
-                add_row(config, data_map['product_topic_join_table_name'], {'product_id': product_id, 'topic_id': topic_id})
+                for topic in topics:
+                    topic_id = add_row(config, data_map['topic_table_name'], topic)
+                    add_row(config, data_map['product_topic_join_table_name'], {'product_id': product_id, 'topic_id': topic_id})
 
-            for module in modules:
-                lessons = module.pop('lessons', [])
-                module['product_id'] = product_id
-                module_id = add_row(config, data_map['module_table_name'], module)
+                for module in modules:
+                    lessons = module.pop('lessons', [])
+                    module['product_id'] = product_id
+                    module_id = add_row(config, data_map['module_table_name'], module)
 
-                for lesson in lessons:
-                    lesson['module_id'] = module_id
-                    add_row(config, data_map['lesson_table_name'], lesson)
+                    for lesson in lessons:
+                        lesson['module_id'] = module_id
+                        add_row(config, data_map['lesson_table_name'], lesson)
 
-            for skill in skills:
-                skill_id = add_row(config, 'skills', skill)
-                add_row(config, data_map['product_skill_join_table'], {'product_id': product_id, 'skill_id': skill_id})
+                for skill in skills:
+                    skill_id = add_row(config, 'skills', skill)
+                    add_row(config, data_map['product_skill_join_table'], {'product_id': product_id, 'skill_id': skill_id})
 
-            processed = processed + 1
+                processed = processed + 1
         logger(f'Created: {created}')
         logger(f'Updated: {updated}')
         logger(f'Skipped: {skipped}')
+        logger(f'Failed: {failed}')
         logger(f'Number of records processed: {processed}')
 
     logger('\n')
+
 if __name__ == '__main__':
     logger('#################### SUMMARY ####################')
     main()

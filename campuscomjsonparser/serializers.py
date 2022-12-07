@@ -81,7 +81,10 @@ class TopicSerializer():
         topic = {}
 
         for key, val in self.mapping.get('topic_map', {}).items():
-            topic[key] = self.data.get(val, None)
+            try:
+                topic[key] = self.data.get(val, None)
+            except AttributeError:
+                logger(f"Topic is in unknown format. Skipping: {self.data}", level=40)
 
         return topic
 
