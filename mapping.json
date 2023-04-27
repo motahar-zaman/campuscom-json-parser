@@ -1,0 +1,60 @@
+{
+    "product_table_name": "updated_products",
+    "topic_table_name": "topics",
+    "module_table_name": "modules",
+    "lesson_table_name": "lessons",
+    "skill_table_name": "skills",
+    "product_topic_join_table_name": "jn_product_topics",
+    "product_skill_join_table": "jn_product_skills",
+
+    "product_map": {
+        "name": "Learning Product Name",
+        "short_desc": "Short Description",
+        "long_desc": "Long Description",
+        "skills": "Skills",
+        "topics": "Topics",
+        "modules": "Modules",
+        "vendor": "Vendor",
+        "category": "Learning Product Category",
+        "price": "Learning Product Price",
+        "level": "Level",
+        "image":"Learning Product Image URL",
+        "keywords": "Keyword Matches",
+        "user_rating": "UserRating",
+        "count_ratings": "UserRatingCount",
+        "provided_by": "Provided by",
+        "type": "Type",
+        "total_enrolled": "Enrolled",
+        "time_to_complete": "Total Time",
+        "prerequisites": "Prerequisites",
+        "url": "Learning Product URL",
+        "language": "Language",
+        "affiliate_link": ""
+    },
+
+    "topic_map": {
+        "name": "Topic Name",
+        "short_desc": "",
+        "long_desc": "",
+        "length": ""
+    },
+
+    "module_map": {
+        "name": "Module Name",
+        "short_desc": "",
+        "long_desc": "Module Description",
+        "time": "Time",
+        "lessons": "Lesson"
+    },
+
+    "lesson_map": {
+        "name": "Lesson Name",
+        "short_desc": "",
+        "long_desc": "Lesson Description",
+        "type": "Type"
+    },
+
+    "skill_map": {
+        "name": "Skill name"
+    }
+}
